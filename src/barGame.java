@@ -22,7 +22,8 @@ class MyLabel extends JLabel{
         if(barSize==maxBarSize){
         	//return 1;
             try{
-                this.wait();//바의 크기가 최대이면, ConsumerThread에 의해 바의 크기가 줄어들때까지 대기
+                this.wait();
+		//바의 크기가 최대이면, ConsumerThread에 의해 바의 크기가 줄어들때까지 대기
             }
             catch(Exception e){
                 return false;

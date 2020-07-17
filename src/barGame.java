@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 @SuppressWarnings("serial")
 class MyLabel extends JLabel{
-    int barSize=0;//¹ÙÀÇ Å©±â
+    int barSize=0;//ë°”ì˜ í¬ê¸°
     int maxBarSize;
     JFrame j = new JFrame();
     Color color = new Color(199, 115, 116);
@@ -15,14 +15,14 @@ class MyLabel extends JLabel{
         super.paintComponent(g);
         g.setColor(color);
         int width =(int)(((double)(this.getWidth()))/maxBarSize*barSize);
-        if(width==0) return;//Å©±â°¡ 0ÀÌ¸é ¹Ù¸¦ ±×¸± ÇÊ¿ä ¾øÀ½
+        if(width==0) return;//í¬ê¸°ê°€ 0ì´ë©´ ë°”ë¥¼ ê·¸ë¦´ í•„ìš” ì—†ìŒ
         g.fillRect(0,0,width,this.getHeight());
     }
     synchronized boolean fill(){
         if(barSize==maxBarSize){
         	//return 1;
             try{
-                this.wait();//¹ÙÀÇ Å©±â°¡ ÃÖ´ëÀÌ¸é, ConsumerThread¿¡ ÀÇÇØ ¹ÙÀÇ Å©±â°¡ ÁÙ¾îµé¶§±îÁö ´ë±â
+                this.wait();//ë°”ì˜ í¬ê¸°ê°€ ìµœëŒ€ì´ë©´, ConsumerThreadì— ì˜í•´ ë°”ì˜ í¬ê¸°ê°€ ì¤„ì–´ë“¤ë•Œê¹Œì§€ ëŒ€ê¸°
             }
             catch(Exception e){
                 return false;
@@ -30,23 +30,24 @@ class MyLabel extends JLabel{
             return true;
         }
         barSize++;
-        this.repaint();//¹Ù ´Ù½Ã±×¸®±â
-        this.notify();//±â´Ù¸®´Â ConsumerThread ½º·¹µå ±ú¿ì±â
+        this.repaint();//ë°” ë‹¤ì‹œê·¸ë¦¬ê¸°
+        this.notify();//ê¸°ë‹¤ë¦¬ëŠ” ConsumerThread ìŠ¤ë ˆë“œ ê¹¨ìš°ê¸°
 		return false;
         
     }
 	synchronized void consume(){
         if(barSize==0){
             try{
-                this.wait();//¹ÙÀÇ Å©±â°¡ 0ÀÌ¸é ¹ÙÀÇ Å©±â°¡ 0º¸´Ù Ä¿Áú¶§±îÁö ´ë±â
+                this.wait();
+		//ë°”ì˜ í¬ê¸°ê°€ 0ì´ë©´ ë°”ì˜ í¬ê¸°ê°€ 0ë³´ë‹¤ ì»¤ì§ˆë•Œê¹Œì§€ ëŒ€ê¸°
             }
             catch(Exception e){
                 return;
             }
         }
         barSize--;
-        this.repaint();//¹Ù ´Ù½Ã ±×¸®±â
-        this.notify();//±â´Ù¸®´Â ÀÌº¥Æ® ½º·¹µå ±ú¿ì±â
+        this.repaint();//ë°” ë‹¤ì‹œ ê·¸ë¦¬ê¸°
+        this.notify();//ê¸°ë‹¤ë¦¬ëŠ” ì´ë²¤íŠ¸ ìŠ¤ë ˆë“œ ê¹¨ìš°ê¸°
     }
 }
 
@@ -59,7 +60,7 @@ class ConsumerThread extends Thread{
         while(true){
             try{
                 sleep(200);
-                con.consume();//0.2ÃÊ¸¶´Ù ¹Ù¸¦ 1¾¿ ÁÙÀÎ´Ù.
+                con.consume();//0.2ì´ˆë§ˆë‹¤ ë°”ë¥¼ 1ì”© ì¤„ì¸ë‹¤.
             }
             catch(Exception e){
                 return;
@@ -70,10 +71,10 @@ class ConsumerThread extends Thread{
 @SuppressWarnings("serial")
 class barGame extends JFrame{
 	ImageIcon startScreen;
-    MyLabel bar = new MyLabel(100);//¹ÙÀÇ ÃÖ´ë Å©±â¸¦ 100À¸·Î ÁöÁ¤
+    MyLabel bar = new MyLabel(100);//ë°”ì˜ ìµœëŒ€ í¬ê¸°ë¥¼ 100ìœ¼ë¡œ ì§€ì •
     barGame(){
 		setIconImage(Toolkit.getDefaultToolkit().getImage("images/etc/omegaBoy.PNG"));
-        this.setTitle("ÆÎÀÌÀÇ ÀÌ»óÇÑ Å»Ãâ");
+        this.setTitle("íŒ¡ì´ì˜ ì´ìƒí•œ íƒˆì¶œ");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
 		startScreen = new ImageIcon("images/backgrounds/barGamebg.png");
@@ -90,7 +91,7 @@ class barGame extends JFrame{
         bar.setLocation(290, 480);
         bar.setSize(500,60);
         panel.add(bar);
-        //Å° ¸®½º³Ê µî·Ï
+        //í‚¤ ë¦¬ìŠ¤ë„ˆ ë“±ë¡
         this.addKeyListener(new KeyListener(){
             @Override
             public void keyTyped(KeyEvent ke) {
@@ -101,7 +102,7 @@ class barGame extends JFrame{
                if(bar.fill()==true) {
 
                 	new gameStory7();
-                	dispose();//Å°¸¦ ´©¸¦¶§¸¶´Ù ¹Ù°¡ 1¾¿ Áõ°¡
+                	dispose();//í‚¤ë¥¼ ëˆ„ë¥¼ë•Œë§ˆë‹¤ ë°”ê°€ 1ì”© ì¦ê°€
                 }
                 
             }
@@ -118,10 +119,10 @@ class barGame extends JFrame{
 		panel.setLayout(null);
 		JScrollPane scrollPane = new JScrollPane(panel);
 		panel.setLayout(null);
-		setContentPane(scrollPane);//ÇÊ¼ö ¡Ù¡Ù¡Ù¡Ù¡Ù
-        this.requestFocus();//Å° Ã³¸®±Ç ºÎ¿©
-        ConsumerThread th = new ConsumerThread(bar);//½º·¹µå »ı¼º
-        th.start();//½º·¹µå ½ÃÀÛ
+		setContentPane(scrollPane);//í•„ìˆ˜ â˜†â˜†â˜†â˜†â˜†
+        this.requestFocus();//í‚¤ ì²˜ë¦¬ê¶Œ ë¶€ì—¬
+        ConsumerThread th = new ConsumerThread(bar);//ìŠ¤ë ˆë“œ ìƒì„±
+        th.start();//ìŠ¤ë ˆë“œ ì‹œì‘
     }
 	public static void main(String[] args) {
 		new barGame();
